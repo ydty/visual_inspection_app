@@ -1,5 +1,5 @@
 # VisualInspectionApp
-![](https://github.com/ydty/visual_inspection_app/workflows/action/badge.svg)
+![](https://github.com/ydty/visual_inspection_app/workflows/dotnet%20app/badge.svg)
 
 ## Installing
 
