@@ -23,7 +23,7 @@ jobs:
       - name: Test
         run: dotnet test --no-restore --verbosity normal
       - name: Build artifacts
-        run: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v2
         with:
           name: my-artifact
           path: VisualInspectionApp/bin/Release/
