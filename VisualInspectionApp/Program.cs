@@ -1,3 +1,5 @@
+using Microsoft.ML;
+
 namespace VisualInspectionApp
 {
     internal static class Program
@@ -9,7 +11,10 @@ namespace VisualInspectionApp
         static void Main()
         {
             ApplicationConfiguration.Initialize();
-            Application.Run(new Form1());
+
+            MLContext mlContext = new MLContext();
+
+            Application.Run(new Form1(mlContext));
         }
     }
 }

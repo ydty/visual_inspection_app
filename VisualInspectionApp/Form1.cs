@@ -1,23 +1,29 @@
 using System.Configuration;
 using Microsoft.Extensions.Configuration;
 using Microsoft.ML;
-using Microsoft.ML.Data;
+using VisualInspectionApp.DataStructures;
 
 namespace VisualInspectionApp
 {
     public partial class Form1 : Form
     {
 
-        public Form1()
+        private readonly MLContext _mlContext;
+
+        public Form1(MLContext mlContext)
         {
             InitializeComponent();
 
             Init();
+
+            _mlContext = mlContext;
+
         }
 
         //初期処理
         private void Init()
         {
+
             //カウントを0にする
             lblImageCountData.Text = "0";
 
@@ -51,32 +57,9 @@ namespace VisualInspectionApp
         {
             try
             {
-                //TODO: 推論処理を書く
-                var assetsRelativePath = @"..\..\..\assets";
-                string assetsPath = GetAbsolutePath(assetsRelativePath);
-                var modelFilePath = Path.Combine(assetsPath, "Model", "segmentation_model.onnx");
-                var imagesFolder = Path.Combine(assetsPath, "images");
-                var outputFolder = Path.Combine(assetsPath, "images", "output");
+                this.SegmentationModelPredict();
 
-                // Initialize MLContext
-                MLContext mlContext = new MLContext();
-
-                IEnumerable<ImageNetData> images = ImageNetData.ReadFromFile(imagesFolder);
-                IDataView imageDataView = mlContext.Data.LoadFromEnumerable(images);
-
-                // Create IDataView from empty list to obtain input data schema
-                var data = mlContext.Data.LoadFromEnumerable(new List<ImageNetData>());
-
-                // Define scoring pipeline
-                var pipeline = mlContext.Transforms.LoadImages(outputColumnName: "image", imageFolder: "", inputColumnName: nameof(ImageNetData.ImagePath))
-                                .Append(mlContext.Transforms.ApplyOnnxModel(modelFile: modelFilePath, outputColumnNames: new[] { SegmentaionModelSettings.ModelOutput }, inputColumnNames: new[] { SegmentaionModelSettings.ModelInput }));
-
-                //var pipeline = mlContext.Transforms.ApplyOnnxModel(modelFile: modelLocation, outputColumnNames: new[] { SegmentaionModelSettings.ModelOutput }, inputColumnNames: new[] { SegmentaionModelSettings.ModelInput });
-
-                // Fit scoring pipeline
-                var model = pipeline.Fit(data);
-
-                IDataView scoredData = model.Transform(imageDataView);
+                this.ReconstructModelPredict();
 
                 var from2 = new Form2();
                 from2.Show();
@@ -88,43 +71,53 @@ namespace VisualInspectionApp
             }
         }
 
-        public static string GetAbsolutePath(string relativePath)
+        /// <summary>
+        /// セグメンテーションモデルの推論
+        /// </summary>
+        private void SegmentationModelPredict()
         {
-            FileInfo _dataRoot = new FileInfo(typeof(Program).Assembly.Location);
-            string assemblyFolderPath = _dataRoot.Directory.FullName;
+            //とりあえず検証のためassets/imagesの画像を対象とする
 
-            string fullPath = Path.Combine(assemblyFolderPath, relativePath);
+            var assetsPath = @"../../../assets";
+            var modelFilePath = Path.Combine(assetsPath, "Model", "segmentation_model.onnx");
 
-            return fullPath;
+            //検証のためassets/Imagesのフォルダからデータを取得
+            var imagesFolder = Path.Combine(assetsPath, "images");
+
+            // Load Data
+            IEnumerable<ConcreteImageData> images = ConcreteImageData.ReadFromFile(imagesFolder);
+            IDataView imageDataView = _mlContext.Data.LoadFromEnumerable(images);
+
+            // Create instance of model
+            var model = new SegmentationModelPredict(imagesFolder, modelFilePath, _mlContext);
+
+            // predict
+            var result = model.Predict(imageDataView).ToList();
         }
-    }
 
-    public class ImageNetData
-    {
-        [LoadColumn(0)]
-        public string ImagePath;
 
-        [LoadColumn(1)]
-        public string Label;
-
-        public static IEnumerable<ImageNetData> ReadFromFile(string imageFolder)
+        /// <summary>
+        /// 再構築モデルの推論
+        /// </summary>
+        private void ReconstructModelPredict()
         {
-            return Directory
-                .GetFiles(imageFolder)
-                .Select(filePath => new ImageNetData { ImagePath = filePath, Label = Path.GetFileName(filePath) });
+            //とりあえず検証のためassets/imagesの画像を対象とする
+
+            var assetsPath = @"../../../assets";
+            var modelFilePath = Path.Combine(assetsPath, "Model", "reconstruct_model.onnx");
+
+            //検証のためassets/Imagesのフォルダからデータを取得
+            var imagesFolder = Path.Combine(assetsPath, "images");
+
+            // Load Data
+            IEnumerable<ConcreteImageData> images = ConcreteImageData.ReadFromFile(imagesFolder);
+            IDataView imageDataView = _mlContext.Data.LoadFromEnumerable(images);
+
+            // Create instance of model
+            var model = new ReconstructModelPredict(imagesFolder, modelFilePath, _mlContext);
+
+            // predict
+            var result = model.Predict(imageDataView).ToList();
         }
-    }
-
-    public struct SegmentaionModelSettings
-    {
-        // for checking Tiny yolo2 Model input and  output  parameter names,
-        //you can use tools like Netron, 
-        // which is installed by Visual Studio AI Tools
-
-        // input tensor name
-        public const string ModelInput = "input_1";
-
-        // output tensor name
-        public const string ModelOutput = "sigmoid";
     }
 }
