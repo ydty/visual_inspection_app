@@ -1,21 +1,29 @@
 using System.Configuration;
 using Microsoft.Extensions.Configuration;
+using Microsoft.ML;
+using VisualInspectionApp.DataStructures;
 
 namespace VisualInspectionApp
 {
     public partial class Form1 : Form
     {
 
-        public Form1()
+        private readonly MLContext _mlContext;
+
+        public Form1(MLContext mlContext)
         {
             InitializeComponent();
 
             Init();
+
+            _mlContext = mlContext;
+
         }
 
         //初期処理
         private void Init()
         {
+
             //カウントを0にする
             lblImageCountData.Text = "0";
 
@@ -49,7 +57,9 @@ namespace VisualInspectionApp
         {
             try
             {
-                //TODO: 推論処理を書く
+                this.SegmentationModelPredict();
+
+                this.ReconstructModelPredict();
 
                 var from2 = new Form2();
                 from2.Show();
@@ -59,6 +69,55 @@ namespace VisualInspectionApp
             {
                 MessageBox.Show(ex.ToString());
             }
+        }
+
+        /// <summary>
+        /// セグメンテーションモデルの推論
+        /// </summary>
+        private void SegmentationModelPredict()
+        {
+            //とりあえず検証のためassets/imagesの画像を対象とする
+
+            var assetsPath = @"../../../assets";
+            var modelFilePath = Path.Combine(assetsPath, "Model", "segmentation_model.onnx");
+
+            //検証のためassets/Imagesのフォルダからデータを取得
+            var imagesFolder = Path.Combine(assetsPath, "images");
+
+            // Load Data
+            IEnumerable<ConcreteImageData> images = ConcreteImageData.ReadFromFile(imagesFolder);
+            IDataView imageDataView = _mlContext.Data.LoadFromEnumerable(images);
+
+            // Create instance of model
+            var model = new SegmentationModelPredict(imagesFolder, modelFilePath, _mlContext);
+
+            // predict
+            var result = model.Predict(imageDataView).ToList();
+        }
+
+
+        /// <summary>
+        /// 再構築モデルの推論
+        /// </summary>
+        private void ReconstructModelPredict()
+        {
+            //とりあえず検証のためassets/imagesの画像を対象とする
+
+            var assetsPath = @"../../../assets";
+            var modelFilePath = Path.Combine(assetsPath, "Model", "reconstruct_model.onnx");
+
+            //検証のためassets/Imagesのフォルダからデータを取得
+            var imagesFolder = Path.Combine(assetsPath, "images");
+
+            // Load Data
+            IEnumerable<ConcreteImageData> images = ConcreteImageData.ReadFromFile(imagesFolder);
+            IDataView imageDataView = _mlContext.Data.LoadFromEnumerable(images);
+
+            // Create instance of model
+            var model = new ReconstructModelPredict(imagesFolder, modelFilePath, _mlContext);
+
+            // predict
+            var result = model.Predict(imageDataView).ToList();
         }
     }
 }
