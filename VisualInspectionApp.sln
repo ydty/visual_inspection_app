@@ -5,7 +5,7 @@ VisualStudioVersion = 17.0.31919.166
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VisualInspectionApp", "VisualInspectionApp\VisualInspectionApp.csproj", "{054D944B-5BBA-420B-95B2-2EE8C983240C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VisualInspectionApp.Tests", "VisualInspectionAppTests\VisualInspectionApp.Tests.csproj", "{EFFDFFC5-3ADF-4A56-A7E7-24EACA8E20D3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VisualInspectionApp.Tests", "VisualInspectionAppTests\VisualInspectionApp.Tests.csproj", "{EFFDFFC5-3ADF-4A56-A7E7-24EACA8E20D3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

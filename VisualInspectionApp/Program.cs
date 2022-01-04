@@ -1,4 +1,5 @@
 using Microsoft.ML;
+using NLog;
 
 namespace VisualInspectionApp
 {
@@ -12,9 +13,12 @@ namespace VisualInspectionApp
         {
             ApplicationConfiguration.Initialize();
 
-            MLContext mlContext = new MLContext();
+            var logger = LogManager.LoadConfiguration("nlog.config").GetCurrentClassLogger();
+            
+            var mlContext = new MLContext();
+            logger.Debug("init main");
 
-            Application.Run(new Form1(mlContext));
+            Application.Run(new Form1(mlContext, logger));
         }
     }
 }
