@@ -44,7 +44,11 @@ namespace VisualInspectionApp
         {
 
             //カウントを0にする
+            txtLotNo.Text = "";
             lblImageCountData.Text = "0";
+            listBoxImageFile.Items.Clear();
+
+            txtLotNo.Focus();
 
             //appsetting.jsonから設定の読み出し
             var cfb = new ConfigurationBuilder();
@@ -99,14 +103,23 @@ namespace VisualInspectionApp
 
                 //this.ReconstructModelPredict();
 
-                var from2 = new Form2(txtLotNo.Text, Path.Combine(_outputDirectory, txtLotNo.Text), _outputDirGood,_outputDirOverlay);
-                from2.Show();
+                var from2 = new Form2(txtLotNo.Text, Path.Combine(_outputDirectory, txtLotNo.Text), _outputDirGood, _outputDirOverlay);
+                from2.FormClosed += new FormClosedEventHandler(Form2_FormClosed);
+                from2.ShowDialog();
+
+                
 
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.ToString());
             }
+        }
+
+        //Form2が閉じた時
+        private void Form2_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            Init();
         }
 
         /// <summary>
@@ -225,7 +238,7 @@ namespace VisualInspectionApp
                     //しきい値に基づいて推論結果の画像を作成
                     var predictImagePath = this.PredictImage(item.Result,item.File);
 
-                    this.CreateMergeImage(item.File, predictImagePath);
+                    this.OverlayImage(item.File, predictImagePath);
 
                     //Badケース
                     File.Copy(item.File, Path.Combine(_outputDirBad, Path.GetFileName(item.File)), true);
@@ -257,7 +270,6 @@ namespace VisualInspectionApp
                 {
                     array[index] = 0;
                 }
-
             }
 
             var writeFile = Path.Combine(_outputDirPredict, Path.GetFileName(fileName));
@@ -269,7 +281,12 @@ namespace VisualInspectionApp
             return writeFile;
         }
 
-        private void CreateMergeImage(string rawImage, string predictImage)
+        /// <summary>
+        /// 画像の重ね合わせ
+        /// </summary>
+        /// <param name="rawImage"></param>
+        /// <param name="predictImage"></param>
+        private void OverlayImage(string rawImage, string predictImage)
         {
             var img1 = Cv2.ImRead(rawImage);
             var img2 = Cv2.ImRead(predictImage);
