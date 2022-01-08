@@ -69,7 +69,7 @@ namespace VisualInspectionApp
             // パイプラインの作成
             var pipeline = mlContext.Transforms.LoadImages(outputColumnName: "input_1", imageFolder: "", inputColumnName: nameof(ConcreteImageData.ImagePath))
                             .Append(mlContext.Transforms.ResizeImages(outputColumnName: "input_1", imageWidth: ImageNetSettings.imageWidth, imageHeight: ImageNetSettings.imageHeight, inputColumnName: "input_1"))
-                            .Append(mlContext.Transforms.ExtractPixels(outputColumnName: "input_1"))
+                            .Append(mlContext.Transforms.ExtractPixels(outputColumnName: "input_1", interleavePixelColors: true))
                             .Append(mlContext.Transforms.ApplyOnnxModel(modelFile: modelLocation, outputColumnNames: new[] { SegmentationModellSettings.ModelOutput }, inputColumnNames: new[] { SegmentationModellSettings.ModelInput }));
 
             // モデルのインスタンス化

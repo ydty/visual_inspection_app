@@ -95,6 +95,9 @@ namespace VisualInspectionApp
                     return;
                 }
 
+                btnStart.Text = "処理中";
+                btnStart.Enabled = false;
+
                 //フォルダを作成
                 this.CreateDataFolder();
 
@@ -107,12 +110,16 @@ namespace VisualInspectionApp
                 from2.FormClosed += new FormClosedEventHandler(Form2_FormClosed);
                 from2.ShowDialog();
 
-                
 
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.ToString());
+            }
+            finally
+            {
+                btnStart.Text = "検査開始";
+                btnStart.Enabled = true;
             }
         }
 
