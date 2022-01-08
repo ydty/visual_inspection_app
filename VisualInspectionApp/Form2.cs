@@ -12,25 +12,48 @@ namespace VisualInspectionApp
 {
     public partial class Form2 : Form
     {
+        private readonly string _lotNo;
+        private readonly string _outputDir;
+        private readonly string _goodDir;
+        private readonly string _badDir;
 
-        public Form2()
+        public Form2(string lotNo, string outputDir,string goodDir, string badDir)
         {
             InitializeComponent();
+
+            _lotNo = lotNo;
+            _outputDir = outputDir;
+            _goodDir = goodDir;
+            _badDir = badDir;
 
             //イメージ表示のための初期処理
             ImageListInit();
 
+            //画像の表示
+            DispImage();
+  
+        }
+
+        private async void DispImage()
+        {
             //良品画像表示
-            GoodImageView();
+            var goodImageCount = await this.GoodImageView();
 
             //不良品画像表示
-            BadImageView();
-            
+            var badImageCount = await this.BadImageView();
+
+            //画像数の表示
+            labelGoodCount.Text = goodImageCount.ToString();
+            labelBadCount.Text = badImageCount.ToString();
+            labelTotalCount.Text = (goodImageCount + badImageCount).ToString();
 
         }
 
         private void ImageListInit()
         {
+            labelLotNo.Text = _lotNo;
+            linkLabelDir.Text = _outputDir;
+
             listViewGood.Columns.Add("GoodImage");
             listViewBad.Columns.Add("BadImage");
 
@@ -43,88 +66,89 @@ namespace VisualInspectionApp
             listViewBad.LargeImageList = imageListBad;
         }
 
-        async void GoodImageView()
+        private async Task<int> GoodImageView()
         {
+            string path = Path.GetFullPath(_goodDir);
 
-            try
+            // リストビューをクリア
+            listViewGood.Items.Clear();
+            imageListGood.Images.Clear();
+
+            Image[] b = { };
+            ListViewItem[] a = { };
+
+            Task<int> task = Task.Run(() =>
             {
-                string path = Path.GetFullPath("..\\..\\..\\..\\Image\\annotated");
 
-                // リストビューをクリア
-                listViewGood.Items.Clear();
-                imageListGood.Images.Clear();
+                var dirInfo = new DirectoryInfo(path);
+                var i = 0;
 
-                Image[] b = { };
-                ListViewItem[] a = { };
+                var d = dirInfo.EnumerateFiles("*.jpg");
+                b = d.Select(x => Bitmap.FromFile(x.FullName))
+                    .ToArray();
+                a = d.Select(x => new ListViewItem(x.Name, i++))
+                    .ToArray();
 
-                Task<int> task = Task.Run(() => {
+                return i;
+            });
 
-                    var dirInfo = new DirectoryInfo(path);
-                    var i = 0;
+            var result = await task;
 
-                    var d = dirInfo.EnumerateFiles("*.jpg");
-                    b = d.Select(x => Bitmap.FromFile(x.FullName))
-                        .ToArray();
-                    a = d.Select(x => new ListViewItem(x.Name, i++))
-                        .ToArray();
-
-                    return i;
-                });
-
-                var result = await task;
-
-                if (result > 0)
-                {
-                    imageListGood.Images.AddRange(b);
-                    listViewGood.Items.AddRange(a);
-                }
-            }
-            catch (Exception ex)
+            if (result > 0)
             {
-                MessageBox.Show(ex.ToString());
+                imageListGood.Images.AddRange(b);
+                listViewGood.Items.AddRange(a);
             }
+
+            return listViewGood.Items.Count;
 
         }
 
-        async void BadImageView()
+        /// <summary>
+        /// 不良画像の表示
+        /// </summary>
+        /// <returns></returns>
+        private async Task<int> BadImageView()
         {
-            try
+            string path = Path.GetFullPath(_badDir);
+
+            // リストビューをクリア
+            listViewBad.Items.Clear();
+            imageListBad.Images.Clear();
+
+            Image[] b = { };
+            ListViewItem[] a = { };
+
+            Task<int> task = Task.Run(() =>
             {
-                string path = Path.GetFullPath("..\\..\\..\\..\\Image\\non_clack"); 
 
-                // リストビューをクリア
-                listViewBad.Items.Clear();
-                imageListBad.Images.Clear();
+                var dirInfo = new DirectoryInfo(path);
+                var i = 0;
 
-                Image[] b = { };
-                ListViewItem[] a = { };
+                var d = dirInfo.EnumerateFiles("*.jpg");
+                b = d.Select(x => Bitmap.FromFile(x.FullName))
+                    .ToArray();
+                a = d.Select(x => new ListViewItem(x.Name, i++))
+                    .ToArray();
 
-                Task<int> task = Task.Run(() => {
+                return i;
+            });
 
-                    var dirInfo = new DirectoryInfo(path);
-                    var i = 0;
+            var result = await task;
 
-                    var d = dirInfo.EnumerateFiles("*.jpg");
-                    b = d.Select(x => Bitmap.FromFile(x.FullName))
-                        .ToArray();
-                    a = d.Select(x => new ListViewItem(x.Name, i++))
-                        .ToArray();
-
-                    return i;
-                });
-
-                var result = await task;
-
-                if (result > 0)
-                {
-                    imageListBad.Images.AddRange(b);
-                    listViewBad.Items.AddRange(a);
-                }
-            }
-            catch (Exception ex)
+            if (result > 0)
             {
-                MessageBox.Show(ex.ToString());
+                imageListBad.Images.AddRange(b);
+                listViewBad.Items.AddRange(a);
             }
+
+            return listViewBad.Items.Count;
+        }
+
+        private void linkLabelDir_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+
+            System.Diagnostics.Process.Start("EXPLORER.EXE", linkLabelDir.Text);
 
         }
     }

@@ -1,3 +1,6 @@
+using Microsoft.ML;
+using NLog;
+
 namespace VisualInspectionApp
 {
     internal static class Program
@@ -9,7 +12,13 @@ namespace VisualInspectionApp
         static void Main()
         {
             ApplicationConfiguration.Initialize();
-            Application.Run(new Form1());
+
+            var logger = LogManager.LoadConfiguration("nlog.config").GetCurrentClassLogger();
+            
+            var mlContext = new MLContext();
+            logger.Debug("init main");
+
+            Application.Run(new Form1(mlContext, logger));
         }
     }
 }

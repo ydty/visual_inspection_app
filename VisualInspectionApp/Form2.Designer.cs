@@ -41,14 +41,14 @@
             this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
             this.groupBoxSummary = new System.Windows.Forms.GroupBox();
             this.tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
+            this.labelTotalCount = new System.Windows.Forms.Label();
+            this.labelBadCount = new System.Windows.Forms.Label();
+            this.labelGoodCount = new System.Windows.Forms.Label();
+            this.label4 = new System.Windows.Forms.Label();
+            this.label3 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
-            this.label3 = new System.Windows.Forms.Label();
-            this.label4 = new System.Windows.Forms.Label();
             this.labelLotNo = new System.Windows.Forms.Label();
-            this.labelGoodCount = new System.Windows.Forms.Label();
-            this.labelBadCount = new System.Windows.Forms.Label();
-            this.labelTotalCount = new System.Windows.Forms.Label();
             this.tableLayoutPanel1.SuspendLayout();
             this.groupBoxGood.SuspendLayout();
             this.groupBoxBad.SuspendLayout();
@@ -59,10 +59,10 @@
             // 
             // label5
             // 
-            this.label5.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.label5.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.label5.AutoSize = true;
             this.label5.Font = new System.Drawing.Font("BIZ UDPゴシック", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.label5.Location = new System.Drawing.Point(980, 717);
+            this.label5.Location = new System.Drawing.Point(18, 717);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(140, 18);
             this.label5.TabIndex = 3;
@@ -70,14 +70,15 @@
             // 
             // linkLabelDir
             // 
-            this.linkLabelDir.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.linkLabelDir.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.linkLabelDir.AutoSize = true;
-            this.linkLabelDir.Location = new System.Drawing.Point(1126, 710);
+            this.linkLabelDir.Location = new System.Drawing.Point(164, 713);
             this.linkLabelDir.Name = "linkLabelDir";
             this.linkLabelDir.Size = new System.Drawing.Size(34, 25);
             this.linkLabelDir.TabIndex = 4;
             this.linkLabelDir.TabStop = true;
             this.linkLabelDir.Text = "c:\\";
+            this.linkLabelDir.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabelDir_LinkClicked);
             // 
             // imageListGood
             // 
@@ -201,6 +202,61 @@
             this.tableLayoutPanel3.Size = new System.Drawing.Size(1136, 118);
             this.tableLayoutPanel3.TabIndex = 0;
             // 
+            // labelTotalCount
+            // 
+            this.labelTotalCount.AutoSize = true;
+            this.labelTotalCount.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.labelTotalCount.Font = new System.Drawing.Font("BIZ UDPゴシック", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.labelTotalCount.Location = new System.Drawing.Point(230, 87);
+            this.labelTotalCount.Name = "labelTotalCount";
+            this.labelTotalCount.Size = new System.Drawing.Size(903, 31);
+            this.labelTotalCount.TabIndex = 5;
+            this.labelTotalCount.Text = "0";
+            // 
+            // labelBadCount
+            // 
+            this.labelBadCount.AutoSize = true;
+            this.labelBadCount.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.labelBadCount.Font = new System.Drawing.Font("BIZ UDPゴシック", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.labelBadCount.Location = new System.Drawing.Point(230, 58);
+            this.labelBadCount.Name = "labelBadCount";
+            this.labelBadCount.Size = new System.Drawing.Size(903, 29);
+            this.labelBadCount.TabIndex = 4;
+            this.labelBadCount.Text = "0";
+            // 
+            // labelGoodCount
+            // 
+            this.labelGoodCount.AutoSize = true;
+            this.labelGoodCount.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.labelGoodCount.Font = new System.Drawing.Font("BIZ UDPゴシック", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.labelGoodCount.Location = new System.Drawing.Point(230, 29);
+            this.labelGoodCount.Name = "labelGoodCount";
+            this.labelGoodCount.Size = new System.Drawing.Size(903, 29);
+            this.labelGoodCount.TabIndex = 3;
+            this.labelGoodCount.Text = "0";
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.label4.Font = new System.Drawing.Font("BIZ UDPゴシック", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.label4.Location = new System.Drawing.Point(3, 87);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(221, 31);
+            this.label4.TabIndex = 1;
+            this.label4.Text = "TOTAL";
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.label3.Font = new System.Drawing.Font("BIZ UDPゴシック", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.label3.Location = new System.Drawing.Point(3, 58);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(221, 29);
+            this.label3.TabIndex = 1;
+            this.label3.Text = "不良品画像";
+            // 
             // label1
             // 
             this.label1.AutoSize = true;
@@ -222,28 +278,6 @@
             this.label2.TabIndex = 1;
             this.label2.Text = "良品画像";
             // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label3.Font = new System.Drawing.Font("BIZ UDPゴシック", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.label3.Location = new System.Drawing.Point(3, 58);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(221, 29);
-            this.label3.TabIndex = 1;
-            this.label3.Text = "不良品画像";
-            // 
-            // label4
-            // 
-            this.label4.AutoSize = true;
-            this.label4.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label4.Font = new System.Drawing.Font("BIZ UDPゴシック", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.label4.Location = new System.Drawing.Point(3, 87);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(221, 31);
-            this.label4.TabIndex = 1;
-            this.label4.Text = "TOTAL";
-            // 
             // labelLotNo
             // 
             this.labelLotNo.AutoSize = true;
@@ -254,39 +288,6 @@
             this.labelLotNo.Size = new System.Drawing.Size(903, 29);
             this.labelLotNo.TabIndex = 2;
             this.labelLotNo.Text = "LotNo";
-            // 
-            // labelGoodCount
-            // 
-            this.labelGoodCount.AutoSize = true;
-            this.labelGoodCount.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.labelGoodCount.Font = new System.Drawing.Font("BIZ UDPゴシック", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.labelGoodCount.Location = new System.Drawing.Point(230, 29);
-            this.labelGoodCount.Name = "labelGoodCount";
-            this.labelGoodCount.Size = new System.Drawing.Size(903, 29);
-            this.labelGoodCount.TabIndex = 3;
-            this.labelGoodCount.Text = "0";
-            // 
-            // labelBadCount
-            // 
-            this.labelBadCount.AutoSize = true;
-            this.labelBadCount.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.labelBadCount.Font = new System.Drawing.Font("BIZ UDPゴシック", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.labelBadCount.Location = new System.Drawing.Point(230, 58);
-            this.labelBadCount.Name = "labelBadCount";
-            this.labelBadCount.Size = new System.Drawing.Size(903, 29);
-            this.labelBadCount.TabIndex = 4;
-            this.labelBadCount.Text = "0";
-            // 
-            // labelTotalCount
-            // 
-            this.labelTotalCount.AutoSize = true;
-            this.labelTotalCount.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.labelTotalCount.Font = new System.Drawing.Font("BIZ UDPゴシック", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.labelTotalCount.Location = new System.Drawing.Point(230, 87);
-            this.labelTotalCount.Name = "labelTotalCount";
-            this.labelTotalCount.Size = new System.Drawing.Size(903, 31);
-            this.labelTotalCount.TabIndex = 5;
-            this.labelTotalCount.Text = "0";
             // 
             // Form2
             // 
