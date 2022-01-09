@@ -182,9 +182,7 @@ namespace VisualInspectionApp
         private void SegmentationModelPredict()
         {
 
-            var assetsPath = @"../../../assets";
-            var modelFilePath = Path.Combine(assetsPath, "Model", "segmentation_model.onnx");
-
+            var modelFilePath = Path.Combine("assets", "Model", "segmentation_model.onnx");
 
             // Load Data
             IEnumerable<ConcreteImageData> images = ConcreteImageData.ReadFromFile(_outputDirRaw);
@@ -206,20 +204,16 @@ namespace VisualInspectionApp
         /// </summary>
         private void ReconstructModelPredict()
         {
-            //とりあえず検証のためassets/imagesの画像を対象とする
 
-            var assetsPath = @"../../../assets";
-            var modelFilePath = Path.Combine(assetsPath, "Model", "reconstruct_model.onnx");
+            var modelFilePath = Path.Combine("assets", "Model", "reconstruct_model.onnx");
 
-            //検証のためassets/Imagesのフォルダからデータを取得
-            var imagesFolder = Path.Combine(assetsPath, "images");
 
             // Load Data
-            IEnumerable<ConcreteImageData> images = ConcreteImageData.ReadFromFile(imagesFolder);
+            IEnumerable<ConcreteImageData> images = ConcreteImageData.ReadFromFile(_outputDirRaw);
             IDataView imageDataView = _mlContext.Data.LoadFromEnumerable(images);
 
             // Create instance of model
-            var model = new ReconstructModelPredict(imagesFolder, modelFilePath, _mlContext);
+            var model = new ReconstructModelPredict(_outputDirRaw, modelFilePath, _mlContext);
 
             // predict
             var results = model.Predict(imageDataView).ToList();
